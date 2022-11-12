@@ -23,8 +23,8 @@
       , "H_size": 128                   // 128/192/256/512.
 
       , "dataloader_shuffle": true
-      , "dataloader_num_workers": 16
-      , "dataloader_batch_size": 64      // Total batch size =8x8=64 in SwinIR
+      , "dataloader_num_workers": 4
+      , "dataloader_batch_size": 32      // Total batch size =8x8=64 in SwinIR
     }
     , "test": {
       "name": "test_dataset"            // just name
@@ -42,9 +42,9 @@
     , "img_size": 64
     , "window_size": 8  
     , "img_range": 1.0 
-    , "depths": [6, 6, 6, 6]
-    , "embed_dim": 60 
-    , "num_heads": [6, 6, 6, 6]
+    , "depths": [6, 6]
+    , "embed_dim": 30 
+    , "num_heads": [6, 6]
     , "mlp_ratio": 2 
     , "upsampler": "pixelshuffledirect"        // "pixelshuffle" | "pixelshuffledirect" | "nearest+conv" | null
     , "resi_connection": "1conv"        // "1conv" | "3conv"

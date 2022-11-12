@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
 import torch
 
+from models.network_swinir import SwinIR as swinIR
 from utils import utils_logger
 from utils import utils_image as util
 from utils import utils_option as option
@@ -146,6 +147,26 @@ def main(json_path='options/train_msrresnet_psnr.json'):
         else:
             raise NotImplementedError("Phase [%s] is not recognized." % phase)
 
+    
+    '''
+    # ----------------------------------------
+    # Teacher Model 추가 시작
+    # ----------------------------------------
+    ''' 
+    teacher_model = swinIR(upscale=2, in_chans=3, img_size=64, window_size=8,
+                    img_range=1., depths=[6, 6, 6, 6], embed_dim=60, num_heads=[6, 6, 6, 6],
+                    mlp_ratio=2, upsampler='pixelshuffledirect', resi_connection='1conv')
+    teacher_model.eval()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    teacher_model = teacher_model.to(device)
+    pretrained_model = torch.load("./model_zoo/002_lightweightSR_DIV2K_s64w8_SwinIR-S_x2.pth")
+    teacher_model.load_state_dict(pretrained_model['params'] if 'params' in pretrained_model.keys() else pretrained_model, strict=True)
+    '''
+    # ----------------------------------------
+    # Teacher Model 추가 끝
+    # ----------------------------------------
+    ''' 
+    
     '''
     # ----------------------------------------
     # Step--3 (initialize model)
@@ -154,6 +175,7 @@ def main(json_path='options/train_msrresnet_psnr.json'):
 
     model = define_Model(opt)
     model.init_train()
+    model.define_teacher(teacher_model)
     if opt['rank'] == 0:
         logger.info(model.info_network())
         logger.info(model.info_params())

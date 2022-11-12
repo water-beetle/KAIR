@@ -664,6 +664,8 @@ class SwinIR(nn.Module):
         self.upsampler = upsampler
         self.window_size = window_size
 
+        self.output_hidden_layer = []  # K.D용 hidden layer 결과 저장용 변수
+
         #####################################################################################################
         ################################### 1, shallow feature extraction ###################################
         self.conv_first = nn.Conv2d(num_in_ch, embed_dim, 3, 1, 1)
@@ -788,6 +790,7 @@ class SwinIR(nn.Module):
         return x
 
     def forward_features(self, x):
+        self.output_hidden_layer = []
         x_size = (x.shape[2], x.shape[3])
         x = self.patch_embed(x)
         if self.ape:
@@ -796,6 +799,7 @@ class SwinIR(nn.Module):
 
         for layer in self.layers:
             x = layer(x, x_size)
+            self.output_hidden_layer.append(x)
 
         x = self.norm(x)  # B L C
         x = self.patch_unembed(x, x_size)
@@ -836,7 +840,10 @@ class SwinIR(nn.Module):
 
         x = x / self.img_range + self.mean
 
-        return x[:, :, :H*self.upscale, :W*self.upscale]
+        ############################################
+        # self.hidden_layer까지 반환하도록 수정 예정 #
+        ############################################
+        return x[:, :, :H*self.upscale, :W*self.upscale], self.output_hidden_layer
 
     def flops(self):
         flops = 0

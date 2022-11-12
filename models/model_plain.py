@@ -45,6 +45,17 @@ class ModelPlain(ModelBase):
         self.define_scheduler()               # define scheduler
         self.log_dict = OrderedDict()         # log
 
+
+    '''
+    # --------------------------------
+    # Teacher Model Class 변수에 추가
+    # --------------------------------
+    '''
+    def define_teacher(self, teacher):
+        self.teacher = teacher
+
+    
+
     # ----------------------------------------
     # load pre-trained G model
     # ----------------------------------------
@@ -152,10 +163,13 @@ class ModelPlain(ModelBase):
             self.H = data['H'].to(self.device)
 
     # ----------------------------------------
-    # feed L to netG
+    # feed L to netG./
     # ----------------------------------------
     def netG_forward(self):
-        self.E = self.netG(self.L)
+
+        self.E, self.student_hidden_layers = self.netG(self.L)
+        with torch.no_grad():
+            self.teacher_result, self.teacher_hidden_layers = self.teacher(self.L)    
 
     # ----------------------------------------
     # update parameters and get loss
@@ -163,7 +177,8 @@ class ModelPlain(ModelBase):
     def optimize_parameters(self, current_step):
         self.G_optimizer.zero_grad()
         self.netG_forward()
-        G_loss = self.G_lossfn_weight * self.G_lossfn(self.E, self.H)
+        #G_loss = self.G_lossfn_weight * self.G_lossfn(self.E, self.H)
+        G_loss = self.G_lossfn(self.E, self.H) + self.G_lossfn(self.E, self.teacher_result)
         G_loss.backward()
 
         # ------------------------------------
