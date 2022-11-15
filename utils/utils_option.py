@@ -69,7 +69,9 @@ def parse(opt_path, is_train=True):
         if path and key in opt['path']:
             opt['path'][key] = os.path.expanduser(path)
 
-    path_task = os.path.join(opt['path']['root'], opt['task'])
+    # path_task = os.path.join(opt['path']['root'], opt['task'])
+    # Google Colab용 코드 수정
+    path_task = os.path.join("/content/drive/MyDrive/Results", opt['task'])
     opt['path']['task'] = path_task
     opt['path']['log'] = path_task
     opt['path']['options'] = os.path.join(path_task, 'options')

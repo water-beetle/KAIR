@@ -9,8 +9,8 @@ class ModelBase():
     def __init__(self, opt):
         self.opt = opt                         # opt
         # Colab용 Save_dir 수정햇음
-        # self.save_dir = opt['path']['models']  # save models
-        self.save_dir = "/content/drive/MyDrive/Results"
+        self.save_dir = opt['path']['models']  # save models
+        #self.save_dir = "/content/drive/MyDrive/Results"
         self.device = torch.device('cuda' if opt['gpu_ids'] is not None else 'cpu')
         self.is_train = opt['is_train']        # training or not
         self.schedulers = []                   # schedulers
