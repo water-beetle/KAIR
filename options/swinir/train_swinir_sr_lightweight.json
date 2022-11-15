@@ -1,5 +1,5 @@
 {
-  "task": "swinir_sr_lightweight_x2"     //  classical image sr for x2/x3/x4. root/task/images-models-options
+  "task": "swinir_sr_lightweight_x2__final_loss_add_ver_learning_rate_low"     //  classical image sr for x2/x3/x4. root/task/images-models-options
   , "model": "plain" // "plain" | "plain2" if two inputs
   , "gpu_ids": [0,1,2,3,4,5,6,7]
   , "dist": true
@@ -17,8 +17,8 @@
     "train": {
       "name": "train_dataset"           // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "trainsets/trainH"// path of H training dataset. DIV2K (800 training images)
-      , "dataroot_L": "trainsets/trainL"              // path of L training dataset
+      , "dataroot_H": "/content/drive/MyDrive/Lab_Dataset/trainsets/trainH"// path of H training dataset. DIV2K (800 training images)
+      , "dataroot_L": "/content/drive/MyDrive/Lab_Dataset/trainsets/trainL"              // path of L training dataset
 
       , "H_size": 128                   // 128/192/256/512.
 
@@ -29,8 +29,8 @@
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "testsets/Set5/HR"  // path of H testing dataset
-      , "dataroot_L": "testsets/Set5/LR_bicubic/X2"              // path of L testing dataset
+      , "dataroot_H": "/content/drive/MyDrive/Lab_Dataset/testsets/HR"  // path of H testing dataset
+      , "dataroot_L": "/content/drive/MyDrive/Lab_Dataset/testsets/LR"              // path of L testing dataset
 
     }
   }
@@ -65,7 +65,7 @@
     , "G_optimizer_reuse": true         // 
 
     , "G_scheduler_type": "MultiStepLR" // "MultiStepLR" is enough
-    , "G_scheduler_milestones": [250000, 400000, 450000, 475000, 500000]
+    , "G_scheduler_milestones": [15000, 20000, 25000, 30000, 40000]
     , "G_scheduler_gamma": 0.5
 
     , "G_regularizer_orthstep": null    // unused
@@ -74,8 +74,8 @@
     , "G_param_strict": true
     , "E_param_strict": true
 
-    , "checkpoint_test": 5000           // for testing
-    , "checkpoint_save": 5000           // for saving model
+    , "checkpoint_test": 2000           // for testing
+    , "checkpoint_save": 2000           // for saving model
     , "checkpoint_print": 200           // for print
   }
 }
