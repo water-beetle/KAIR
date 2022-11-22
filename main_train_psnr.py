@@ -97,7 +97,8 @@ def main(json_path='options/train_msrresnet_psnr.json'):
     # ----------------------------------------
     # seed
     # ----------------------------------------
-    seed = opt['train']['manual_seed']
+    #seed = opt['train']['manual_seed']
+    seed = 7142
     if seed is None:
         seed = random.randint(1, 10000)
     print('Random seed: {}'.format(seed))
