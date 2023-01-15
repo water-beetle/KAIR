@@ -145,6 +145,7 @@ def main(json_path='options/train_msrresnet_psnr.json'):
             test_loader = DataLoader(test_set, batch_size=1,
                                      shuffle=False, num_workers=1,
                                      drop_last=False, pin_memory=True)
+            
         else:
             raise NotImplementedError("Phase [%s] is not recognized." % phase)
 
@@ -197,102 +198,63 @@ def main(json_path='options/train_msrresnet_psnr.json'):
     #     strict=False
     # )
 
-    '''
-    # ----------------------------------------
-    # Step--4 (main training)
-    # ----------------------------------------
-    '''
+    test_datas_opt = [{'name': 'test_dataset', 'dataset_type': 'sr', 'dataroot_H': './testsets/HR/set14', 'dataroot_L': './testsets/LR/set14', 'phase': 'test', 'scale': 2, 'n_channels': 3, 'H_size' : 128},
+    {'name': 'test_dataset', 'dataset_type': 'sr', 'dataroot_H': './testsets/HR/set5', 'dataroot_L': './testsets/LR/set5', 'phase': 'test', 'scale': 2, 'n_channels': 3, 'H_size' : 128},
+    {'name': 'test_dataset', 'dataset_type': 'sr', 'dataroot_H': './testsets/HR/Manga109', 'dataroot_L': './testsets/LR/Manga109', 'phase': 'test', 'scale': 2, 'n_channels': 3, 'H_size' : 128},
+    {'name': 'test_dataset', 'dataset_type': 'sr', 'dataroot_H': './testsets/HR/Urban', 'dataroot_L': './testsets/LR/Urban', 'phase': 'test', 'scale': 2, 'n_channels': 3, 'H_size' : 128}
+    ]
 
-    for epoch in range(1000000):  # keep running
-        if opt['dist']:
-            train_sampler.set_epoch(epoch)
+    f = open(f"./results/result.txt", "a")
+    f.write(opt['path']['models']+"\n")
 
-        for i, train_data in enumerate(train_loader):
+    for test_data_opt in test_datas_opt:
+        avg_psnr = 0.0
+        idx = 0
+        print(test_data_opt)
+        test_set = define_Dataset(test_data_opt)
+        test_loader = DataLoader(test_set, batch_size=1,
+                                    shuffle=False, num_workers=1,
+                                    drop_last=False, pin_memory=True)
 
-            current_step += 1
+        for test_data in test_loader:
+            idx += 1
+            image_name_ext = os.path.basename(test_data['L_path'][0])
+            img_name, ext = os.path.splitext(image_name_ext)
 
-            # -------------------------------
-            # 1) update learning rate
-            # -------------------------------
-            model.update_learning_rate(current_step)
+            img_dir = os.path.join(opt['path']['images'], img_name)
+            util.mkdir(img_dir)
 
-            # -------------------------------
-            # 2) feed patch pairs
-            # -------------------------------
-            model.feed_data(train_data)
+            model.feed_data(test_data)
+            model.test()
 
-            # -------------------------------
-            # 3) optimize parameters
-            # -------------------------------
-            model.optimize_parameters(current_step)
+            visuals = model.current_visuals()
+            E_img = util.tensor2uint(visuals['E'])
+            H_img = util.tensor2uint(visuals['H'])
 
-            # -------------------------------
-            # 3.5) Block Size or Alpha, Beta값 조절
-            # -------------------------------
+            # -----------------------
+            # save estimated image E
+            # -----------------------
+            save_img_path = os.path.join(img_dir, '{:s}_{:d}.png'.format(img_name, current_step))
+            util.imsave(E_img, save_img_path)
 
-            model.update_alpha_beta(current_step)
-            #model.update_block_num(current_step)
+            # -----------------------
+            # calculate PSNR
+            # -----------------------
+            current_psnr = util.calculate_psnr(E_img, H_img, border=border)
 
-            # -------------------------------
-            # 4) training information
-            # -------------------------------
-            if current_step % opt['train']['checkpoint_print'] == 0 and opt['rank'] == 0:
-                logs = model.current_log()  # such as loss
-                message = '<epoch:{:3d}, iter:{:8,d}, lr:{:.3e}> '.format(epoch, current_step, model.current_learning_rate())
-                for k, v in logs.items():  # merge log information into message
-                    message += '{:s}: {:.3e} '.format(k, v)
-                message += f'alpha : {model.alpha}, block_num : {model.netG.module.block_num}'
-                logger.info(message)
+            logger.info('{:->4d}--> {:>10s} | {:<4.2f}dB'.format(idx, image_name_ext, current_psnr))
 
-            # -------------------------------
-            # 5) save model
-            # -------------------------------
-            if current_step % opt['train']['checkpoint_save'] == 0 and opt['rank'] == 0:
-                logger.info('Saving the model.')
-                model.save(current_step)
+            avg_psnr += current_psnr
 
-            # -------------------------------
-            # 6) testing
-            # -------------------------------
-            if current_step % opt['train']['checkpoint_test'] == 0 and opt['rank'] == 0:
+        avg_psnr = avg_psnr / idx
 
-                avg_psnr = 0.0
-                idx = 0
+        # testing log
+        logger.info('Average PSNR : {:<.2f}dB\n'.format(avg_psnr))
+        f.write("\t" + str(test_data_opt['dataroot_H']) +' '+ str(avg_psnr)+"\n")
 
-                for test_data in test_loader:
-                    idx += 1
-                    image_name_ext = os.path.basename(test_data['L_path'][0])
-                    img_name, ext = os.path.splitext(image_name_ext)
+    f.write("\n")
+    f.close()
 
-                    img_dir = os.path.join(opt['path']['images'], img_name)
-                    util.mkdir(img_dir)
-
-                    model.feed_data(test_data)
-                    model.test()
-
-                    visuals = model.current_visuals()
-                    E_img = util.tensor2uint(visuals['E'])
-                    H_img = util.tensor2uint(visuals['H'])
-
-                    # -----------------------
-                    # save estimated image E
-                    # -----------------------
-                    save_img_path = os.path.join(img_dir, '{:s}_{:d}.png'.format(img_name, current_step))
-                    util.imsave(E_img, save_img_path)
-
-                    # -----------------------
-                    # calculate PSNR
-                    # -----------------------
-                    current_psnr = util.calculate_psnr(E_img, H_img, border=border)
-
-                    logger.info('{:->4d}--> {:>10s} | {:<4.2f}dB'.format(idx, image_name_ext, current_psnr))
-
-                    avg_psnr += current_psnr
-
-                avg_psnr = avg_psnr / idx
-
-                # testing log
-                logger.info('<epoch:{:3d}, iter:{:8,d}, Average PSNR : {:<.2f}dB\n'.format(epoch, current_step, avg_psnr))
 
 if __name__ == '__main__':
     main()

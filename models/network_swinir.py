@@ -608,6 +608,7 @@ class UpsampleOneStep(nn.Sequential):
         m.append(nn.Conv2d(num_feat, (scale ** 2) * num_out_ch, 3, 1, 1))
         m.append(nn.PixelShuffle(scale))
         super(UpsampleOneStep, self).__init__(*m)
+    
 
     def flops(self):
         H, W = self.input_resolution
@@ -665,6 +666,8 @@ class SwinIR(nn.Module):
         self.window_size = window_size
 
         self.output_hidden_layer = []  # K.D용 hidden layer 결과 저장용 변수
+        self.first_last_conv_layer = [] # K.D용 Conv layer 결과 저장용 변수
+        self.block_num = len(depths) # Student의 Transformer Block 개수
 
         #####################################################################################################
         ################################### 1, shallow feature extraction ###################################
@@ -789,6 +792,9 @@ class SwinIR(nn.Module):
         x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
         return x
 
+    def set_block_num(self, number):
+        self.block_num = number
+
     def forward_features(self, x):
         self.output_hidden_layer = []
         x_size = (x.shape[2], x.shape[3])
@@ -797,7 +803,7 @@ class SwinIR(nn.Module):
             x = x + self.absolute_pos_embed
         x = self.pos_drop(x)
 
-        for layer in self.layers:
+        for layer in self.layers[:self.block_num]: # Block 개수 조절을 위해서 코드 수정
             x = layer(x, x_size)
             self.output_hidden_layer.append(x)
 
@@ -821,8 +827,11 @@ class SwinIR(nn.Module):
             x = self.conv_last(self.upsample(x))
         elif self.upsampler == 'pixelshuffledirect':
             # for lightweight SR
+            self.first_last_conv_layer = []
             x = self.conv_first(x)
+            self.first_last_conv_layer.append(x)
             x = self.conv_after_body(self.forward_features(x)) + x
+            self.first_last_conv_layer.append(x)
             x = self.upsample(x)
         elif self.upsampler == 'nearest+conv':
             # for real-world SR
@@ -843,7 +852,7 @@ class SwinIR(nn.Module):
         ############################################
         # self.hidden_layer까지 반환하도록 수정 예정 #
         ############################################
-        return x[:, :, :H*self.upscale, :W*self.upscale], self.output_hidden_layer
+        return x[:, :, :H*self.upscale, :W*self.upscale], self.output_hidden_layer, self.first_last_conv_layer
 
     def flops(self):
         flops = 0

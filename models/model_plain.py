@@ -22,9 +22,15 @@ class ModelPlain(ModelBase):
         # ------------------------------------
         self.opt_train = self.opt['train']    # training option
         self.netG = define_G(opt)
+        self.my_mse =  CharbonnierLoss(1e-9).to(self.device)
         self.netG = self.model_to_device(self.netG)
         if self.opt_train['E_decay'] > 0:
             self.netE = define_G(opt).to(self.device).eval()
+
+        # Block 개수나 alpha, beta를 조절할 Iteration 횟수 
+        self.decay_iter = [300, 100000]
+        # alpha, beta 초기화
+        self.alpha, self.beta = 3/4, 1/4
 
     """
     # ----------------------------------------
@@ -54,7 +60,28 @@ class ModelPlain(ModelBase):
     def define_teacher(self, teacher):
         self.teacher = teacher
 
-    
+    '''
+    # --------------------------------
+    # α, β값 업데이트
+    # --------------------------------
+    '''
+    def update_alpha_beta(self, iter):
+        if iter == self.decay_iter[0]:
+            self.alpha, self.beta = 2/4, 1/4
+        elif iter == self.decay_iter[1]:
+            self.alpha, self.beta = 1/4, 3/4
+
+    '''
+    # --------------------------------
+    # Transformer Block 개수 업데이트
+    # --------------------------------
+    '''
+    def update_block_num(self, iter):
+        if iter == self.decay_iter[0]:
+            self.netG.module.set_block_num(2)
+        elif iter == self.decay_iter[1]:
+            self.netG.module.set_block_num(1)
+        
 
     # ----------------------------------------
     # load pre-trained G model
@@ -167,9 +194,9 @@ class ModelPlain(ModelBase):
     # ----------------------------------------
     def netG_forward(self):
 
-        self.E, self.student_hidden_layers = self.netG(self.L)
+        self.E, self.student_hidden_layers, self.student_first_last_conv_layer = self.netG(self.L)
         with torch.no_grad():
-            self.teacher_result, self.teacher_hidden_layers = self.teacher(self.L)    
+            self.teacher_result, self.teacher_hidden_layers, self.teacher_last_conv_layer = self.teacher(self.L)    
 
     # ----------------------------------------
     # update parameters and get loss
@@ -177,8 +204,26 @@ class ModelPlain(ModelBase):
     def optimize_parameters(self, current_step):
         self.G_optimizer.zero_grad()
         self.netG_forward()
+        mse = torch.nn.MSELoss()
+        
+        # 혹시나 맞는지 검증 코드
+        #assert torch.equal(self.student_hidden_layers[-1], self.student_hidden_layers[1])
+        #assert torch.equal(self.teacher_hidden_layers[-1], self.teacher_hidden_layers[3])
+        #assert self.teacher_hidden_layers[-1].requires_grad == False
+
         #G_loss = self.G_lossfn_weight * self.G_lossfn(self.E, self.H)
-        G_loss = self.G_lossfn(self.E, self.H) + self.G_lossfn(self.E, self.teacher_result)
+
+        #G_loss = self.G_lossfn(self.E, self.H) + mse(self.student_hidden_layers[0], self.teacher_hidden_layers[0]) +/
+        #    mse(self.student_hidden_layers[0] , self.teacher_hidden_layers[0])
+
+        #G_loss = self.G_lossfn(self.E, self.H) + self.G_lossfn(self.E, self.teacher_result)
+
+        G_loss = self.alpha * self.G_lossfn(self.E, self.H) + self.beta * (self.my_mse(self.student_hidden_layers[0] , self.teacher_hidden_layers[0]) + self.G_lossfn(self.E, self.teacher_result))
+
+        #G_loss = self.G_lossfn(self.E, self.H) + self.my_mse(self.teacher_last_conv_layer[0], self.student_first_last_conv_layer[0])
+
+        #G_loss = self.G_lossfn(self.E, self.H) + self.my_mse(self.teacher_last_conv_layer[1], self.student_first_last_conv_layer[1])
+
         G_loss.backward()
 
         # ------------------------------------

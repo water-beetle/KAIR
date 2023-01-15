@@ -1,0 +1,60 @@
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_embed60_6,6_all_mse\models
+	./testsets/HR/set14 30.417427263954835
+	./testsets/HR/set5 34.322298607261004
+	./testsets/HR/Manga109 34.29405594846864
+	./testsets/HR/Urban 27.62693467920175
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_embed60_6,6_farst_last_mse\models
+	./testsets/HR/set14 30.597007736206347
+	./testsets/HR/set5 34.845014555719594
+	./testsets/HR/Manga109 34.67350555393365
+	./testsets/HR/Urban 27.83995216650539
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_embed60_6,6_first_mse\models
+	./testsets/HR/set14 31.3021536000516
+	./testsets/HR/set5 35.551359851466785
+	./testsets/HR/Manga109 35.96140733068664
+	./testsets/HR/Urban 29.494876647353315
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_student_embed60\models
+	./testsets/HR/set14 31.249955167228105
+	./testsets/HR/set5 35.606778084686106
+	./testsets/HR/Manga109 36.210814650405865
+	./testsets/HR/Urban 29.490100764489444
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_embed60_6,6_last_mse\models
+	./testsets/HR/set14 30.798037907291256
+	./testsets/HR/set5 35.11553605494076
+	./testsets/HR/Manga109 35.28792096736836
+	./testsets/HR/Urban 28.161849113439338
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_embed60_6,6_last2_mse\models
+	./testsets/HR/set14 30.63016728107595
+	./testsets/HR/set5 34.759305036236036
+	./testsets/HR/Manga109 34.80782984438954
+	./testsets/HR/Urban 27.912366580210964
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_loss_embed60_output_add\models
+	./testsets/HR/set14 31.284333670769968
+	./testsets/HR/set5 35.631886528869124
+	./testsets/HR/Manga109 36.18828904609571
+	./testsets/HR/Urban 29.567237528357964
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_student_embed60_shallow_extract\models
+	./testsets/HR/set14 31.212970270009123
+	./testsets/HR/set5 35.51888717221797
+	./testsets/HR/Manga109 36.084689942345
+	./testsets/HR/Urban 29.366239112768852
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_student_embed60_after_transformer_conv\models
+	./testsets/HR/set14 31.190062031847056
+	./testsets/HR/set5 35.5354669409722
+	./testsets/HR/Manga109 35.9355245665052
+	./testsets/HR/Urban 29.21292875047376
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_student_embed60_final\models
+	./testsets/HR/set14 31.31527295989264
+	./testsets/HR/set5 35.66173724407055
+	./testsets/HR/Manga109 36.20200818132588
+	./testsets/HR/Urban 29.583737858961012
+
