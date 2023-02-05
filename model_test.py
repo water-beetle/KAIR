@@ -174,6 +174,7 @@ def main(json_path='options/train_msrresnet_psnr.json'):
     model = define_Model(opt)
     model.init_train()
     model.define_teacher(teacher_model)
+    #model.netG.module.set_block_num(3)
     if opt['rank'] == 0:
         logger.info(model.info_network())
         logger.info(model.info_params())

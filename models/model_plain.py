@@ -28,9 +28,9 @@ class ModelPlain(ModelBase):
             self.netE = define_G(opt).to(self.device).eval()
 
         # Block 개수나 alpha, beta를 조절할 Iteration 횟수 
-        self.decay_iter = [300, 100000]
+        self.decay_iter = [60000, 90000]
         # alpha, beta 초기화
-        self.alpha, self.beta = 3/4, 1/4
+        self.alpha, self.beta = 0.5, 0.5
 
     """
     # ----------------------------------------
@@ -66,9 +66,9 @@ class ModelPlain(ModelBase):
     # --------------------------------
     '''
     def update_alpha_beta(self, iter):
-        if iter == self.decay_iter[0]:
-            self.alpha, self.beta = 2/4, 1/4
-        elif iter == self.decay_iter[1]:
+        if iter >= self.decay_iter[0]:
+            self.alpha, self.beta = 2/4, 2/4
+        if iter >= self.decay_iter[1]:
             self.alpha, self.beta = 1/4, 3/4
 
     '''
@@ -195,8 +195,8 @@ class ModelPlain(ModelBase):
     def netG_forward(self):
 
         self.E, self.student_hidden_layers, self.student_first_last_conv_layer = self.netG(self.L)
-        with torch.no_grad():
-            self.teacher_result, self.teacher_hidden_layers, self.teacher_last_conv_layer = self.teacher(self.L)    
+       #with torch.no_grad():
+            #self.teacher_result, self.teacher_hidden_layers, self.teacher_last_conv_layer = self.teacher(self.L)    
 
     # ----------------------------------------
     # update parameters and get loss
@@ -211,14 +211,14 @@ class ModelPlain(ModelBase):
         #assert torch.equal(self.teacher_hidden_layers[-1], self.teacher_hidden_layers[3])
         #assert self.teacher_hidden_layers[-1].requires_grad == False
 
-        #G_loss = self.G_lossfn_weight * self.G_lossfn(self.E, self.H)
+        G_loss = self.G_lossfn_weight * self.G_lossfn(self.E, self.H)
 
         #G_loss = self.G_lossfn(self.E, self.H) + mse(self.student_hidden_layers[0], self.teacher_hidden_layers[0]) +/
         #    mse(self.student_hidden_layers[0] , self.teacher_hidden_layers[0])
 
         #G_loss = self.G_lossfn(self.E, self.H) + self.G_lossfn(self.E, self.teacher_result)
 
-        G_loss = self.alpha * self.G_lossfn(self.E, self.H) + self.beta * (self.my_mse(self.student_hidden_layers[0] , self.teacher_hidden_layers[0]) + self.G_lossfn(self.E, self.teacher_result))
+        #G_loss = self.alpha * self.G_lossfn(self.E, self.H) + self.beta * (self.my_mse(self.student_hidden_layers[0] , self.teacher_hidden_layers[0]) + self.G_lossfn(self.E, self.teacher_result))
 
         #G_loss = self.G_lossfn(self.E, self.H) + self.my_mse(self.teacher_last_conv_layer[0], self.student_first_last_conv_layer[0])
 

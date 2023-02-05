@@ -58,3 +58,141 @@
 	./testsets/HR/Manga109 36.20200818132588
 	./testsets/HR/Urban 29.583737858961012
 
+----------------------------------------------------------------------------------------------------
+/content/drive/MyDrive/Results\experiment_9_16_teacher\models
+	./testsets/HR/set14 31.336508541084363
+	./testsets/HR/set5 35.63348664706701
+	./testsets/HR/Manga109 36.29453261516377
+	./testsets/HR/Urban 29.7393515797372
+
+/content/drive/MyDrive/Results\swinir_sr_lightweight_x2_student_embed60_final\models -> 수정필요함 why? 이상한 teacher model 사용 하....
+	./testsets/HR/set14 31.333579806465
+	./testsets/HR/set5 35.67433488514246
+	./testsets/HR/Manga109 36.16611155847627
+	./testsets/HR/Urban 29.635884460097905
+
+/content/drive/MyDrive/Results\experiment_9\models
+	./testsets/HR/set14 31.293368945295807
+	./testsets/HR/set5 35.62540740650733
+	./testsets/HR/Manga109 36.179160121295574
+	./testsets/HR/Urban 29.5411727008035
+
+/content/drive/MyDrive/Results\experiment_10\models
+	./testsets/HR/set14 31.286852526537718
+	./testsets/HR/set5 35.61300405164569
+	./testsets/HR/Manga109 36.10101485846274
+	./testsets/HR/Urban 29.513108840501264
+
+/content/drive/MyDrive/Results\experiment_11\models
+	./testsets/HR/set14 31.279675117324565
+	./testsets/HR/set5 35.593037249667084
+	./testsets/HR/Manga109 36.11227598981607
+	./testsets/HR/Urban 29.50896044254903
+
+/content/drive/MyDrive/Results\experiment_12\models
+	./testsets/HR/set14 31.275703524085465
+	./testsets/HR/set5 35.61344967766182
+	./testsets/HR/Manga109 36.17865448613409
+	./testsets/HR/Urban 29.529961390423654
+
+/content/drive/MyDrive/Results\experiment_13\models
+	./testsets/HR/set14 31.233953238963814
+	./testsets/HR/set5 35.53668403227005
+	./testsets/HR/Manga109 35.980711063410034
+	./testsets/HR/Urban 29.41648825784496
+
+/content/drive/MyDrive/Results\experiment_14\models
+	./testsets/HR/set14 31.232522977248433
+	./testsets/HR/set5 35.54693655045374
+	./testsets/HR/Manga109 35.99890242958078
+	./testsets/HR/Urban 29.421850608306308
+
+/content/drive/MyDrive/Results\experiment_15\models
+	./testsets/HR/set14 31.23930474241452
+	./testsets/HR/set5 35.537802289739304
+	./testsets/HR/Manga109 36.03844003398872
+	./testsets/HR/Urban 29.43498419603213
+
+/content/drive/MyDrive/Results\experiment_16\models
+	./testsets/HR/set14 31.237020519301673
+	./testsets/HR/set5 35.5756100374082
+	./testsets/HR/Manga109 36.10038501561209
+	./testsets/HR/Urban 29.44701670680191
+
+-------------------------------------------------------------------------------------
+
+/content/drive/MyDrive/Results\experiment_1\models
+	./testsets/HR/set14 31.28696405514186
+	./testsets/HR/set5 35.64584507968705
+	./testsets/HR/Manga109 36.30873103738401
+	./testsets/HR/Urban 29.529628790472444
+
+/content/drive/MyDrive/Results\experiment_2\models
+	./testsets/HR/set14 31.27401436130501
+	./testsets/HR/set5 35.64416294545831
+	./testsets/HR/Manga109 36.41006276930057
+	./testsets/HR/Urban 29.571572267608477
+
+/content/drive/MyDrive/Results\experiment_3\models
+	./testsets/HR/set14 31.267499033400004
+	./testsets/HR/set5 35.65735962671003
+	./testsets/HR/Manga109 36.369145946124554
+	./testsets/HR/Urban 29.493554742752746
+
+/content/drive/MyDrive/Results\experiment_4\models
+	./testsets/HR/set14 29.898993099371975
+	./testsets/HR/set5 33.17436991620265
+	./testsets/HR/Manga109 32.97220047064083
+	./testsets/HR/Urban 27.932323771338538
+
+/content/drive/MyDrive/Results\3_layer_asdf\models
+	./testsets/HR/set14 31.30344348801884
+	./testsets/HR/set5 35.641070626057925
+	./testsets/HR/Manga109 36.307703490104714
+	./testsets/HR/Urban 29.62436508788363
+
+----------------------------------------------------------------------------------------
+
+/content/drive/MyDrive/Results\experiment_5\models
+	./testsets/HR/set14 30.50105364201002
+	./testsets/HR/set5 34.672715765699
+	./testsets/HR/Manga109 34.60215118302737
+	./testsets/HR/Urban 27.742525547732175
+
+/content/drive/MyDrive/Results\experiment_6\models
+	./testsets/HR/set14 30.51180260137446
+	./testsets/HR/set5 34.69457241733348
+	./testsets/HR/Manga109 34.67356280725237
+	./testsets/HR/Urban 27.760666379339142
+
+/content/drive/MyDrive/Results\experiment_7\models
+	./testsets/HR/set14 30.474757432478814
+	./testsets/HR/set5 34.62337698385167
+	./testsets/HR/Manga109 34.45841742263954
+	./testsets/HR/Urban 27.716002669125455
+
+/content/drive/MyDrive/Results\experiment_8\models
+	./testsets/HR/set14 30.496760070180592
+	./testsets/HR/set5 34.67060688560575
+	./testsets/HR/Manga109 34.604128367065925
+	./testsets/HR/Urban 27.744394320776674
+
+/content/drive/MyDrive/Results\Teacher_model_asdf\models
+	./testsets/HR/set14 31.35945022785975
+	./testsets/HR/set5 35.697947041178416
+	./testsets/HR/Manga109 36.473560055571774
+	./testsets/HR/Urban 29.759559284757177
+
+/content/drive/MyDrive/Results\experiment_2layer_student_base\models
+/content/drive/MyDrive/Results\experiment_2layer_student_base\models
+	./testsets/HR/set14 31.26250284916364
+	./testsets/HR/set5 35.602098091699744
+	./testsets/HR/Manga109 36.255098868996484
+	./testsets/HR/Urban 29.52847217919179
+
+/content/drive/MyDrive/Results\1layer_asdf\models
+	./testsets/HR/set14 30.562462931702793
+	./testsets/HR/set5 34.781382701090884
+	./testsets/HR/Manga109 34.895376229712426
+	./testsets/HR/Urban 27.852504875997205
+

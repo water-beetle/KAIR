@@ -160,7 +160,7 @@ def main(json_path='options/train_msrresnet_psnr.json'):
     teacher_model.eval()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     teacher_model = teacher_model.to(device)
-    pretrained_model = torch.load("./model_zoo/002_lightweightSR_DIV2K_s64w8_SwinIR-S_x2.pth")
+    pretrained_model = torch.load("./model_zoo/114000_G.pth")
     teacher_model.load_state_dict(pretrained_model['params'] if 'params' in pretrained_model.keys() else pretrained_model, strict=True)
    
 
@@ -230,7 +230,7 @@ def main(json_path='options/train_msrresnet_psnr.json'):
             # 3.5) Block Size or Alpha, Beta값 조절
             # -------------------------------
 
-            model.update_alpha_beta(current_step)
+            #model.update_alpha_beta(current_step)
             #model.update_block_num(current_step)
 
             # -------------------------------
